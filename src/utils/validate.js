@@ -65,6 +65,33 @@ export function validEmail(email) {
 }
 
 /**
+ * @param {string} phone
+ * @returns {Boolean}
+ */
+export function validPhone(phone) {
+  const reg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/
+  return reg.test(phone)
+}
+
+/**
+ * @param {Number} amount
+ * @returns {Boolean}
+ */
+export function validAmount(amount) {
+  const reg = /^(?!00)\d{1,15}([.]\d{0,8})?$/
+  return reg.test(amount)
+}
+
+/**
+ * @param {Number} password
+ * @returns {Boolean}
+ */
+export function validStrongPassword(password) {
+  const reg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+  return reg.test(password)
+}
+
+/**
  * @param {string} str
  * @returns {Boolean}
  */
@@ -84,4 +111,12 @@ export function isArray(arg) {
     return Object.prototype.toString.call(arg) === '[object Array]'
   }
   return Array.isArray(arg)
+}
+
+/**
+ * @param {Object} obj
+ * @returns {Boolean}
+ */
+export function isEmpty(obj) {
+  return obj === '' || obj === null || obj === undefined
 }
