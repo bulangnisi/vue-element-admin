@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -38,14 +39,22 @@ module.exports = {
     },
     before: require('./mock/mock-server.js')
   },
-  configureWebpack: {
+
+  configureWebpack: config => {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
-    name: name,
-    resolve: {
-      alias: {
-        '@': resolve('src')
-      }
+    config.name = name
+    if (process.env.NODE_ENV === 'production') {
+      const plugins = [
+        // use gzip
+        new CompressionWebpackPlugin({
+          algorithm: 'gzip',
+          test: new RegExp('\\.(' + ['js', 'css'].join('|') + ')$'),
+          threshold: 10240,
+          minRatio: 0.8
+        })
+      ]
+      config.plugins = [...config.plugins, ...plugins]
     }
   },
   chainWebpack(config) {
@@ -118,5 +127,6 @@ module.exports = {
           config.optimization.runtimeChunk('single')
         }
       )
+    config.resolve.alias.set('@', resolve('src')).end()
   }
 }
